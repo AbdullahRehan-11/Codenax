@@ -1,0 +1,392 @@
+@import "tailwindcss";
+
+/* `dark:` utilities follow the data-theme attribute set on <html>, not the OS setting. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *)); 
+
+/* ------------------------------------------------------------------ */
+/* Static tokens                                                       */
+/* ------------------------------------------------------------------ */
+@theme {
+  /* Brand scale built around the reference site's primary, #1a95d5 (brand-500). */
+  --color-brand-50: #eef8fd;
+  --color-brand-100: #d7eefa;
+  --color-brand-200: #b0ddf4;
+  --color-brand-300: #7cc6ec;
+  --color-brand-400: #45ade2;
+  --color-brand-500: #1a95d5;
+  --color-brand-600: #0f7bb8;
+  --color-brand-700: #0d6396;
+  --color-brand-800: #0f527a;
+  --color-brand-900: #113f5c;
+  --color-brand-950: #0a263a;
+  /* Secondary blue, from the reference site's gradient end (#0d6efd), slightly deepened. */
+  --color-royal-500: #1f63e6;
+  --color-royal-600: #1a52c4;
+
+  /* Fluid type scale for headings and lead text. Body sizes use Tailwind defaults. */
+  --text-display-1: clamp(2.5rem, 1.75rem + 3.75vw, 4.5rem);
+  --text-display-1--line-height: 1.05;
+  --text-display-1--letter-spacing: -0.03em;
+  --text-display-2: clamp(2rem, 1.55rem + 2.25vw, 3.25rem);
+  --text-display-2--line-height: 1.1;
+  --text-display-2--letter-spacing: -0.025em;
+  --text-display-3: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+  --text-display-3--line-height: 1.2;
+  --text-display-3--letter-spacing: -0.02em;
+  --text-lead: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+  --text-lead--line-height: 1.65;
+  --text-eyebrow: 0.8125rem;
+  --text-eyebrow--line-height: 1.2;
+  --text-eyebrow--letter-spacing: 0.08em;
+
+  /* Elevation */
+  --shadow-soft: 0 1px 2px rgb(11 27 43 / 0.04), 0 4px 16px -4px rgb(11 27 43 / 0.08);
+  --shadow-lift: 0 2px 4px rgb(11 27 43 / 0.04), 0 18px 40px -12px rgb(11 27 43 / 0.2);
+  --shadow-glow: 0 10px 28px -10px rgb(26 149 213 / 0.6);
+
+  /* Motion */
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-marquee: marquee 50s linear infinite;
+  --animate-fade-up: fade-up 700ms var(--ease-smooth) both;
+  --animate-float: float 6s ease-in-out infinite;
+  /* One-shot icon motions, played when a process stage becomes current. */
+  --animate-icon-wiggle: icon-wiggle 700ms ease-in-out;
+  --animate-icon-nudge: icon-nudge 700ms var(--ease-smooth);
+  --animate-icon-pop: icon-pop 500ms var(--ease-smooth);
+  --animate-icon-draw: icon-draw 800ms var(--ease-smooth);
+
+  @keyframes marquee {
+    to {
+      translate: -50% 0;
+    }
+  }
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      translate: 0 0.75rem;
+    }
+  }
+  @keyframes float {
+    50% {
+      translate: 0 -0.5rem;
+    }
+  }
+  /* Progress bar fill (case-study stage); duration is set inline. */
+  @keyframes progress {
+    from {
+      scale: 0 1;
+    }
+  }
+  @keyframes icon-wiggle {
+    25% {
+      rotate: -14deg;
+    }
+    50% {
+      rotate: 10deg;
+    }
+    75% {
+      rotate: -5deg;
+    }
+  }
+  @keyframes icon-nudge {
+    40% {
+      translate: 2px -4px;
+    }
+  }
+  @keyframes icon-pop {
+    40% {
+      scale: 1.25;
+    }
+  }
+  @keyframes icon-draw {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0);
+    }
+  }
+}
+
+/* Semantic tokens, mapped to theme-aware variables below. */
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk), var(--font-inter), ui-sans-serif, sans-serif;
+
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-link: var(--link);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary: var(--on-primary);
+  --color-soft: var(--soft);
+  --color-soft-foreground: var(--soft-foreground);
+  --color-ring: var(--ring);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+}
+
+/* ------------------------------------------------------------------ */
+/* Themes (all text pairs checked for WCAG AA 4.5:1)                   */
+/* ------------------------------------------------------------------ */
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+  --background: #ffffff;
+  --surface: #f5f9fc;
+  --surface-2: #eaf2f8;
+  --foreground: #0b1b2b;
+  --muted: #4f6275;
+  --line: #dde7ef;
+  --line-strong: #c5d4e1;
+  --link: #0d6fa8;
+  --primary: #0f7bb8;
+  --primary-hover: #0d6396;
+  --on-primary: #ffffff;
+  --soft: #e6f3fb;
+  --soft-foreground: #0b5f91;
+  --ring: #0f7bb8;
+  --danger: #c02a3a;
+  --danger-soft: #fdecee;
+  --success: #127a4a;
+  --success-soft: #e7f6ee;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #07111c;
+  --surface: #0c1a28;
+  --surface-2: #12243a;
+  --foreground: #e8f1f8;
+  --muted: #9aaec1;
+  --line: #1f3348;
+  --line-strong: #2c4660;
+  --link: #6cc0ec;
+  --primary: #0f7bb8;
+  --primary-hover: #0d6396;
+  --on-primary: #ffffff;
+  --soft: #0f2a40;
+  --soft-foreground: #8fd0f2;
+  --ring: #6cc0ec;
+  --danger: #ff8a93;
+  --danger-soft: #3a1419;
+  --success: #5fd39a;
+  --success-soft: #0f2e20;
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Keeps anchored headings clear of the sticky navbar (Phase 3). */
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    transition: background-color 200ms var(--ease-smooth), color 200ms var(--ease-smooth);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--color-brand-200);
+    color: var(--color-brand-950);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  /* Scroll reveal (components/layout/scroll-reveal.tsx). Content is hidden only when JS is
+     running (data-js) and motion is welcome. An animation, not a transition, so it never
+     clashes with an element's own hover transitions. Stagger with style="--reveal-delay". */
+  @media (prefers-reduced-motion: no-preference) {
+    [data-js] [data-reveal]:not([data-revealed]) {
+      opacity: 0;
+    }
+    [data-js] [data-reveal][data-revealed] {
+      animation: fade-up 800ms var(--ease-smooth) var(--reveal-delay, 0ms) backwards;
+    }
+    /* data-reveal="stagger" (testimonial rail): the children rise one after another instead of
+       the block as a whole. The delay stops growing after the 4th card (style="--reveal-index"). */
+    [data-js] [data-reveal="stagger"][data-revealed] {
+      animation: none;
+    }
+    [data-js] [data-reveal="stagger"][data-revealed] > * {
+      animation: fade-up 800ms var(--ease-smooth) calc(min(var(--reveal-index, 0), 3) * 120ms) backwards;
+    }
+  }
+
+  /* Accordions (<details>: FAQs, footer groups, mobile menu) glide open and shut. Browsers
+     without ::details-content or interpolate-size keep the instant toggle, and so does reduced
+     motion (the global reduced-motion rule below doesn't reach ::details-content). */
+  @supports (interpolate-size: allow-keywords) {
+    @media (prefers-reduced-motion: no-preference) {
+      :root {
+        interpolate-size: allow-keywords;
+      }
+      details::details-content {
+        block-size: 0;
+        overflow-y: clip;
+        opacity: 0;
+        transition:
+          block-size 350ms var(--ease-smooth),
+          opacity 250ms var(--ease-smooth),
+          content-visibility 350ms allow-discrete;
+      }
+      details[open]::details-content {
+        block-size: auto;
+        opacity: 1;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    ::view-transition-old(*),
+    ::view-transition-new(*),
+    ::view-transition-group(*) {
+      animation-duration: 0s !important;
+      animation-delay: 0s !important;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Page transitions (app/template.tsx)                                 */
+/* ------------------------------------------------------------------ */
+/* The old page fades out quickly; the new one rises in a moment later. The rest of the
+   window (navbar, footer) is not animated. Clicks pass through while it plays. */
+::view-transition {
+  pointer-events: none;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+::view-transition-old(.page-exit) {
+  animation: page-out 160ms ease-in both;
+}
+::view-transition-new(.page-enter) {
+  animation: page-in 380ms var(--ease-smooth) 100ms both;
+}
+@keyframes page-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes page-in {
+  from {
+    opacity: 0;
+    translate: 0 12px;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Stat count-up (components/sections/stats.tsx)                       */
+/* ------------------------------------------------------------------ */
+/* The visible number is a CSS counter fed by --to, animated from 0 by a registered integer
+   property; the real value ("120+") sits in screen-reader text. No JavaScript, and without
+   motion (or without @property support) the final number is simply shown. "load" counts on
+   page load; inside [data-reveal] it counts when the block scrolls into view. */
+@property --stat-n {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 0;
+}
+.stat-count {
+  --stat-n: var(--to);
+  counter-reset: stat var(--stat-n);
+}
+.stat-count::before {
+  content: counter(stat);
+}
+@keyframes count-up {
+  from {
+    --stat-n: 0;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .stat-count[data-count="load"],
+  [data-revealed] .stat-count {
+    animation: count-up 1600ms var(--ease-smooth) 200ms both;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Utilities                                                           */
+/* ------------------------------------------------------------------ */
+
+/* Brand gradient text. Use at display sizes only (large-text contrast). */
+@utility text-gradient {
+  background-image: linear-gradient(100deg, var(--color-brand-500), var(--color-royal-500));
+  background-clip: text;
+  color: transparent;
+}
+
+/* Brand gradient fill for decorative surfaces. */
+@utility bg-brand-gradient {
+  background-image: linear-gradient(135deg, var(--color-brand-500), var(--color-royal-600));
+}
+
+/* Subtle blueprint grid that fades out towards the edges. */
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+/* Horizontal scrollers (tabs, rails) without a visible scrollbar. */
+/* Fades a scroller's edges where more content is hidden. Set --fade-l / --fade-r (e.g. 48px or 0px). */
+@utility mask-fade-x {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 var(--fade-l, 0px),
+    #000 calc(100% - var(--fade-r, 0px)),
+    transparent
+  );
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
